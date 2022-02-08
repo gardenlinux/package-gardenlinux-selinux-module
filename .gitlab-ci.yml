@@ -1,0 +1,21 @@
+stages:
+- source
+- build
+variables:
+  GIT_DEPTH: 1
+  DEBFULLNAME: "Garden Linux builder"
+  DEBEMAIL: "contact@gardenlinux.io"
+  DEBIAN_FRONTEND: noninteractive
+  BUILD_ARCH_ALL: 'true'
+  BUILD_ARCH_ARM64: ''
+  BUILD_ARCH_AMD64: ''
+.build:
+  variables:
+    PKG_NAME: "gardenlinux-selinux-module"
+    PKG_VERSION: "1.0.0"
+include:
+- local: .gitlab/ci/source.yml
+- project: gardenlinux/gardenlinux-package-build
+  file:
+  - pipeline/build.yml
+  - pipeline/workflow.yml

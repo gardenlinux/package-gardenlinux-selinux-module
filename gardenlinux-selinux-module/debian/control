@@ -1,0 +1,16 @@
+Source: gardenlinux-selinux-module
+Section: selinux
+Priority: optional
+Maintainer: Christoph Senkel <christoph.senkel@credativ.de>
+Build-Depends: debhelper-compat (= 13), checkpolicy, semodule-utils
+Standards-Version: 4.5.1
+Homepage: <insert the upstream URL, if relevant>
+#Vcs-Browser: https://salsa.debian.org/debian/gardenlinux-selinux-module
+#Vcs-Git: https://salsa.debian.org/debian/gardenlinux-selinux-module.git
+Rules-Requires-Root: no
+
+Package: gardenlinux-selinux-module
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, policycoreutils
+Description: Selinux module for GardenLinux
+  This package installs and enables selinux rules for GardenLinux.
