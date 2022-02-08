@@ -1,6 +1,8 @@
 stages:
 - source
 - build
+- signed source
+- signed build
 variables:
   GIT_DEPTH: 1
   DEBFULLNAME: "Garden Linux builder"
@@ -19,3 +21,5 @@ include:
   file:
   - pipeline/build.yml
   - pipeline/workflow.yml
+  - pipeline/signed-source.yml
+  - pipeline/signed-build.yml
