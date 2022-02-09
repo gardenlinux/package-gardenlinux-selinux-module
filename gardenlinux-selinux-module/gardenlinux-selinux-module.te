@@ -1,7 +1,6 @@
 module gardenlinux 1.0.0;
 
 require {
-  class blk_file { getattr };
   class capability { fowner dac_read_search fsetid };
   class chr_file { watch_reads unlink };
   class dir { search getattr add_name open read rmdir create rename reparent setattr write remove_name mounton relabelfrom relabelto };
@@ -9,17 +8,16 @@ require {
   class file { read open map getattr append write lock execute_no_trans create rename unlink ioctl link setattr relabelfrom relabelto execute };
   class filesystem { getattr };
   class lnk_file { create getattr read write };
-  class process { noatsecure rlimitinh siginh transition };
   class sock_file { create write };
   class unix_stream_socket { connectto };
-  type auditctl_t,auditd_etc_t,auditd_log_t,auditd_t,boot_t,bpf_t,cgroup_t,configfs_t,cron_spool_t,dbusd_etc_t,default_context_t,default_t,
-       dosfs_t,etc_t,etc_runtime_t,faillog_t,fixed_disk_device_t,getty_t,hostname_exec_t,hugetlbfs_t,ifconfig_exec_t,init_runtime_t,init_t,
-       init_var_lib_t,kmod_t,lastlog_t,locale_t,local_login_t,modules_conf_t,mount_t,nsfs_t,ntp_drift_t,ntpd_t,pstore_t,ramfs_t,
-       rngd_t,security_t,shadow_t,sshd_key_t,sshd_t,ssh_keygen_t,sysctl_vm_overcommit_t,sysctl_vm_t,syslogd_t,sysstat_log_t,sysstat_t,
-       system_cron_spool_t,system_dbusd_t,system_dbusd_var_lib_t,systemd_coredump_var_lib_t,systemd_generator_t,systemd_journal_t,
-       systemd_logind_t,systemd_logind_var_lib_t,systemd_modules_load_t,systemd_networkd_runtime_t,systemd_networkd_t,systemd_pstore_var_lib_t,
-       systemd_resolved_runtime_t,systemd_resolved_t,systemd_sessions_t,systemd_sysusers_t,systemd_tmpfiles_t,systemd_user_runtime_dir_t,tmpfs_t,
-       tmp_t,tracefs_t,tty_device_t,udev_t,var_lib_t,var_lock_t,var_log_t,var_run_t,var_spool_t,var_t,wtmp_t;
+  type auditctl_t,auditd_etc_t,auditd_log_t,auditd_t,cgroup_t,cron_spool_t,dbusd_etc_t,default_context_t,default_t,
+       etc_t,etc_runtime_t,faillog_t,getty_t,init_runtime_t,init_t,init_var_lib_t,kmod_t,lastlog_t,locale_t,
+       modules_conf_t,mount_t,nsfs_t,ntp_drift_t,ntpd_t,rngd_t,security_t,shadow_t,sshd_key_t,
+       ssh_keygen_t,sysctl_vm_overcommit_t,sysctl_vm_t,syslogd_t,sysstat_log_t,sysstat_t,system_cron_spool_t,system_dbusd_t,
+       system_dbusd_var_lib_t,systemd_coredump_var_lib_t,systemd_generator_t,systemd_journal_t,systemd_logind_t,
+       systemd_logind_var_lib_t,systemd_modules_load_t,systemd_networkd_t,systemd_pstore_var_lib_t,systemd_resolved_runtime_t,
+       systemd_resolved_t,systemd_sessions_t,systemd_sysusers_t,systemd_tmpfiles_t,systemd_user_runtime_dir_t,tmpfs_t,
+       tmp_t,tty_device_t,udev_t,unlabeled_t,var_lib_t,var_lock_t,var_log_t,var_run_t,var_spool_t,var_t,wtmp_t;
 }
 
 allow auditctl_t default_t:file { read open map };
@@ -87,24 +85,6 @@ allow ntpd_t systemd_resolved_t:unix_stream_socket { connectto };
 allow rngd_t default_t:dir { search };
 allow rngd_t default_t:file { getattr map open read };
 
-#allow sshd_t boot_t:dir { search };
-#allow sshd_t bpf_t:dir { getattr };
-#allow sshd_t configfs_t:dir { getattr };
-#allow sshd_t default_t:dir { search getattr };
-#allow sshd_t default_t:file { getattr map open read };
-#allow sshd_t dosfs_t:dir { getattr };
-#allow sshd_t fixed_disk_device_t:blk_file { getattr };
-#allow sshd_t hostname_exec_t:file { execute execute_no_trans getattr map read open };
-#allow sshd_t hugetlbfs_t:dir { getattr };
-#allow sshd_t ifconfig_exec_t:file { execute execute_no_trans getattr map read open };
-#allow sshd_t nsfs_t:file { getattr };
-#allow sshd_t pstore_t:dir { getattr };
-#allow sshd_t ramfs_t:dir { getattr };
-#allow sshd_t systemd_networkd_runtime_t:dir { search };
-#allow sshd_t systemd_networkd_runtime_t:file { getattr open read };
-#allow sshd_t tracefs_t:dir { getattr };
-#allow sshd_t var_lock_t:dir { getattr }; 
-
 allow ssh_keygen_t default_t:dir { search };
 allow ssh_keygen_t locale_t:dir { search };
 allow ssh_keygen_t locale_t:file { getattr map open read };
@@ -120,7 +100,14 @@ allow system_dbusd_t security_t:file { map };
 
 allow systemd_generator_t cron_spool_t:dir { getattr open read search };
 allow systemd_generator_t system_cron_spool_t:dir { getattr open read search };
-#allow systemd_generator_t unlabeled_t:dir { getattr };
+### Fixme
+# Needed because the file /etc/veritytab is not labeled properly during the image build process.
+# Please remove the unlabeled_t from the type list in the required bock at the top of this file.
+allow systemd_generator_t unlabeled_t:dir { getattr };
+allow systemd_generator_t unlabeled_t:file { getattr ioctl open read };
+### Fixme
+# When selinux is installed and enabled in the build system /etc/veritytab is labeled etc_runtime_t,
+# but installing selinux in the build system is only a workaround.
 allow systemd_generator_t etc_runtime_t:file { getattr ioctl open read };
 allow systemd_generator_t var_run_t:dir { add_name write };
 allow systemd_generator_t var_run_t:file { append open create getattr ioctl};
