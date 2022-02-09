@@ -11,6 +11,7 @@ variables:
   BUILD_ARCH_ALL: 'true'
   BUILD_ARCH_ARM64: ''
   BUILD_ARCH_AMD64: ''
+  BUILD_SIGNED: 'true'
 .build:
   variables:
     PKG_NAME: "gardenlinux-selinux-module"
