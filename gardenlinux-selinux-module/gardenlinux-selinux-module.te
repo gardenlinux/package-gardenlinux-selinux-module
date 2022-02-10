@@ -10,7 +10,7 @@ require {
   class lnk_file { create getattr read write };
   class sock_file { create write };
   class unix_stream_socket { connectto };
-  type auditctl_t,auditd_etc_t,auditd_log_t,auditd_t,cgroup_t,cron_spool_t,dbusd_etc_t,default_context_t,default_t,
+  type auditctl_t,auditd_etc_t,auditd_log_t,auditd_t,cgroup_t,cron_spool_t,dbusd_etc_t,default_context_t,default_t,efivarfs_t,
        etc_t,etc_runtime_t,faillog_t,getty_t,init_runtime_t,init_t,init_var_lib_t,kmod_t,lastlog_t,locale_t,
        modules_conf_t,mount_t,nsfs_t,ntp_drift_t,ntpd_t,rngd_t,security_t,shadow_t,sshd_key_t,
        ssh_keygen_t,sysctl_vm_overcommit_t,sysctl_vm_t,syslogd_t,sysstat_log_t,sysstat_t,system_cron_spool_t,system_dbusd_t,
@@ -151,3 +151,5 @@ allow systemd_user_runtime_dir_t default_t:file { getattr map open read };
 
 allow udev_t default_t:dir { search getattr };
 allow udev_t init_runtime_t:dir { read };
+allow udev_t efivarfs_t:dir { search };
+allow udev_t efivarfs_t:file { read open getattr };
