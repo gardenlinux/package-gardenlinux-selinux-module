@@ -100,15 +100,6 @@ allow system_dbusd_t security_t:file { map };
 
 allow systemd_generator_t cron_spool_t:dir { getattr open read search };
 allow systemd_generator_t system_cron_spool_t:dir { getattr open read search };
-### Fixme
-# Needed because the file /etc/veritytab is not labeled properly during the image build process.
-# Please remove the unlabeled_t from the type list in the required bock at the top of this file.
-allow systemd_generator_t unlabeled_t:dir { getattr };
-allow systemd_generator_t unlabeled_t:file { getattr ioctl open read };
-### Fixme
-# When selinux is installed and enabled in the build system /etc/veritytab is labeled etc_runtime_t,
-# but installing selinux in the build system is only a workaround.
-allow systemd_generator_t etc_runtime_t:file { getattr ioctl open read };
 allow systemd_generator_t var_run_t:dir { add_name write };
 allow systemd_generator_t var_run_t:file { append open create getattr ioctl};
 allow systemd_generator_t var_spool_t:dir { search };
