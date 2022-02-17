@@ -17,7 +17,7 @@ require {
        system_dbusd_var_lib_t,systemd_coredump_var_lib_t,systemd_generator_t,systemd_journal_t,systemd_logind_t,
        systemd_logind_var_lib_t,systemd_modules_load_t,systemd_networkd_t,systemd_pstore_var_lib_t,systemd_resolved_runtime_t,
        systemd_resolved_t,systemd_sessions_t,systemd_sysusers_t,systemd_tmpfiles_t,systemd_user_runtime_dir_t,tmpfs_t,
-       tmp_t,tty_device_t,udev_t,unlabeled_t,var_lib_t,var_lock_t,var_log_t,var_run_t,var_spool_t,var_t,wtmp_t;
+       tmp_t,tty_device_t,udev_t,udev_rules_t,var_lib_t,var_lock_t,var_log_t,var_run_t,var_spool_t,var_t,wtmp_t;
 }
 
 allow auditctl_t default_t:file { read open map };
@@ -67,6 +67,7 @@ allow mount_t systemd_journal_t:file { getattr write open create read setattr };
 allow mount_t systemd_logind_var_lib_t:dir { read create setattr };
 allow mount_t systemd_pstore_var_lib_t:dir { create getattr read relabelfrom relabelto setattr };
 allow mount_t tmp_t:dir { rmdir create rename relabelfrom relabelto reparent };
+allow mount_t udev_rules_t:dir { read };
 allow mount_t var_lib_t:dir { create open rename reparent add_name relabelfrom relabelto };
 allow mount_t var_lock_t:lnk_file { getattr read };
 allow mount_t var_log_t:dir { read rename reparent add_name create relabelfrom relabelto };
