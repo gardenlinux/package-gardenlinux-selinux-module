@@ -3,6 +3,8 @@ stages:
 - build
 - signed source
 - signed build
+- test
+- deploy
 variables:
   GIT_DEPTH: 1
   DEBFULLNAME: "Garden Linux builder"
@@ -11,7 +13,6 @@ variables:
   BUILD_ARCH_ALL: 'true'
   BUILD_ARCH_ARM64: ''
   BUILD_ARCH_AMD64: ''
-  BUILD_SIGNED: 'true'
 .build:
   variables:
     PKG_NAME: "gardenlinux-selinux-module"
@@ -24,3 +25,5 @@ include:
   - pipeline/workflow.yml
   - pipeline/signed-source.yml
   - pipeline/signed-build.yml
+  - pipeline/deploy.yml
+  - pipeline/variables.yml
