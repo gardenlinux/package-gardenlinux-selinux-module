@@ -1,16 +1,8 @@
-stages:
-- source
-- build
-- signed source
-- signed build
-- test
-- deploy
 variables:
   BUILD_ARCH_ALL: 'true'
   BUILD_ARCH_ARM64: ''
   BUILD_ARCH_AMD64: ''
 include:
 - project: gardenlinux/gardenlinux-package-build
-  ref: pipeline-native
   file:
   - pipeline/pipeline-native.yml

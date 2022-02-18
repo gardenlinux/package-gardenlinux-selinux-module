@@ -1,5 +1,6 @@
-gardenlinux-selinux-module (1.0.0) unstable; urgency=medium
+gardenlinux-selinux-module (1.0.0) gardenlinux; urgency=medium
 
+  [ Christoph Senkel ]
   * Initial release
 
- -- Christoph Senkel <christoph.senkel@credativ.de>  Thu, 03 Feb 2022 12:47:21 +0000
+ -- Christoph Senkel <christoph.senkel@credativ.de>  Fri, 18 Feb 2022 14:57:54 +0100
