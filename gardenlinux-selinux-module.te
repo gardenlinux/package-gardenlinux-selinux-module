@@ -1,24 +1,27 @@
 module gardenlinux 1.0.0;
 
 require {
-  class capability { fowner dac_read_search fsetid };
+  class capability { fowner dac_read_search fsetid sys_rawio };
   class chr_file { watch_reads unlink };
-  class dir { search getattr add_name open read rmdir create rename reparent setattr write remove_name mounton relabelfrom relabelto };
+  class dbus { send_msg };
+  class dir { search getattr add_name open read rmdir create rename reparent setattr write remove_name mounton relabelfrom relabelto watch };
   class fd { use };
+  class fifo_file { create setattr relabelfrom relabelto getattr read write open };
   class file { read open map getattr append write lock execute_no_trans create rename unlink ioctl link setattr relabelfrom relabelto execute };
   class filesystem { getattr };
   class key { write };
   class lnk_file { create getattr read write };
   class sock_file { create write };
   class unix_stream_socket { connectto };
-  type auditctl_t,auditd_etc_t,auditd_log_t,auditd_t,cgroup_t,cron_spool_t,dbusd_etc_t,default_context_t,default_t,efivarfs_t,
-       etc_t,etc_runtime_t,faillog_t,getty_t,init_runtime_t,init_t,init_var_lib_t,kmod_t,lastlog_t,lib_t,locale_t,
-       modules_conf_t,mount_t,nsfs_t,ntp_drift_t,ntpd_t,rngd_t,security_t,shadow_t,sshd_key_t,
-       ssh_keygen_t,sysctl_vm_overcommit_t,sysctl_vm_t,syslogd_t,sysstat_log_t,sysstat_t,system_cron_spool_t,system_dbusd_t,
-       system_dbusd_var_lib_t,systemd_coredump_var_lib_t,systemd_detect_virt_exec_t,systemd_generator_t,systemd_journal_t,systemd_logind_t,
-       systemd_logind_var_lib_t,systemd_modules_load_t,systemd_networkd_t,systemd_pstore_var_lib_t,systemd_resolved_runtime_t,
-       systemd_resolved_t,systemd_sessions_t,systemd_sysusers_t,systemd_tmpfiles_t,systemd_user_runtime_dir_t,tmpfs_t,
-       tmp_t,tty_device_t,udev_t,udev_rules_t,var_lib_t,var_lock_t,var_log_t,var_run_t,var_spool_t,var_t,wtmp_t;
+  type auditctl_t,auditd_etc_t,auditd_log_t,auditd_t,boot_t,bpf_t,cert_t,cgroup_t,cron_spool_t,configfs_t,dbusd_etc_t,default_context_t,default_t,
+       efivarfs_t,device_t,dosfs_t,etc_t,etc_runtime_t,faillog_t,getty_t,hostname_exec_t,hugetlbfs_t,ifconfig_exec_t,init_runtime_t,init_t,
+       init_var_lib_t,kmod_t,lastlog_t,lib_t,locale_t,local_login_t,modules_conf_t,mount_t,nsfs_t,ntp_drift_t,ntpd_t,pstore_t,ramfs_t,rngd_t,
+       security_t,shadow_t,sshd_key_t,ssh_keygen_t,sysctl_vm_overcommit_t,sysctl_vm_t,syslogd_t,syslogd_var_lib_t,sysstat_log_t,sysstat_t,
+       system_cron_spool_t,system_dbusd_t,system_dbusd_var_lib_t,system_mail_t,systemd_coredump_var_lib_t,systemd_detect_virt_exec_t,
+       systemd_generator_t,systemd_journal_t,systemd_logind_t,systemd_logind_var_lib_t,systemd_modules_load_t,systemd_networkd_t,
+       systemd_networkd_runtime_t,systemd_pstore_var_lib_t,systemd_resolved_runtime_t,systemd_resolved_t,systemd_sessions_t,systemd_sysusers_t,
+       systemd_tmpfiles_t,systemd_user_runtime_dir_t,tmpfs_t,tmp_t,tracefs_t,tty_device_t,udev_t,udev_rules_t,unlabeled_t,var_lib_t,var_lock_t,
+       var_log_t,var_run_t,var_spool_t,var_t,wtmp_t;
 }
 
 allow auditctl_t default_t:file { read open map };
@@ -34,6 +37,33 @@ allow kmod_t default_t:dir { search };
 allow kmod_t default_t:file { getattr map open read };
 allow kmod_t kmod_t:key { write };
 allow kmod_t tmpfs_t:file { getattr open write };
+
+allow local_login_t auditd_log_t:dir { getattr };
+allow local_login_t boot_t:dir { search };
+allow local_login_t bpf_t:dir { getattr };
+allow local_login_t bpf_t:filesystem { getattr };
+allow local_login_t configfs_t:dir { getattr };
+allow local_login_t configfs_t:filesystem { getattr };
+allow local_login_t device_t:filesystem { getattr };
+allow local_login_t dosfs_t:dir { getattr };
+allow local_login_t dosfs_t:filesystem { getattr };
+allow local_login_t hostname_exec_t:file { execute execute_no_trans map };
+allow local_login_t hugetlbfs_t:dir { getattr };
+allow local_login_t hugetlbfs_t:filesystem { getattr };
+allow local_login_t ifconfig_exec_t:file { execute execute_no_trans map };
+allow local_login_t nsfs_t:file { getattr };
+allow local_login_t pstore_t:dir { getattr };
+allow local_login_t pstore_t:filesystem { getattr };
+allow local_login_t ramfs_t:dir { getattr };
+allow local_login_t ramfs_t:filesystem { getattr };
+allow local_login_t systemd_networkd_t:dbus { send_msg };
+allow local_login_t systemd_networkd_runtime_t:dir { search };
+allow local_login_t systemd_networkd_runtime_t:file { read open getattr };
+allow local_login_t tmpfs_t:filesystem { getattr };
+allow local_login_t tracefs_t:dir { getattr };
+allow local_login_t tracefs_t:filesystem { getattr };
+allow local_login_t var_run_t:dir { create };
+allow local_login_t var_run_t:file { create read write open lock getattr };
 
 allow mount_t auditd_etc_t:dir { read getattr open read };
 allow mount_t auditd_etc_t:file { getattr read open };
@@ -93,7 +123,12 @@ allow ssh_keygen_t locale_t:dir { search };
 allow ssh_keygen_t locale_t:file { getattr map open read };
 
 allow syslogd_t default_t:dir { search };
+allow syslogd_t device_t:fifo_file { create getattr read write open setattr };
 allow syslogd_t init_runtime_t:file { open read };
+allow syslogd_t syslogd_var_lib_t:sock_file { create };
+allow syslogd_t systemd_journal_t:dir { watch };
+allow syslogd_t tmpfs_t:dir { search write add_name remove_name };
+allow syslogd_t tmpfs_t:file { create read write open map unlink };
 
 allow sysstat_t default_t:file { getattr map open read };
 
@@ -101,10 +136,19 @@ allow system_dbusd_t default_t:dir { getattr search };
 allow system_dbusd_t default_t:file { getattr map open read };
 allow system_dbusd_t security_t:file { map };
 
+allow system_mail_t var_spool_t:dir { write add_name read remove_name };
+allow system_mail_t var_spool_t:file { create write open read link unlink };
+allow system_mail_t var_spool_t:fifo_file { write open };
+
+allow systemd_generator_t cert_t:dir { search read };
+allow systemd_generator_t cert_t:file { read open getattr };
 allow systemd_generator_t cron_spool_t:dir { getattr write open read search };
-allow systemd_generator_t lib_t:file { execute_no_trans };
+allow systemd_generator_t lib_t:dir { create write add_name remove_name };
+allow systemd_generator_t lib_t:file { execute_no_trans create write unlink rename };
 allow systemd_generator_t system_cron_spool_t:dir { getattr open read search };
 allow systemd_generator_t systemd_detect_virt_exec_t:file { execute execute_no_trans map };
+allow systemd_generator_t systemd_generator_t:capability { sys_rawio };
+allow systemd_generator_t unlabeled_t:file { getattr read open ioctl };
 allow systemd_generator_t var_run_t:dir { add_name write create};
 allow systemd_generator_t var_run_t:file { append open create getattr ioctl write };
 allow systemd_generator_t var_spool_t:dir { search };
@@ -120,6 +164,7 @@ allow systemd_networkd_t cgroup_t:filesystem { getattr };
 allow systemd_networkd_t default_t:dir { getattr search };
 allow systemd_networkd_t init_runtime_t:dir { read };
 allow systemd_networkd_t init_runtime_t:file { read open };
+allow systemd_networkd_t local_login_t:dbus { send_msg };
 allow systemd_networkd_t nsfs_t:file { getattr };
 allow systemd_networkd_t tmpfs_t:filesystem { getattr };
 
@@ -141,6 +186,7 @@ allow systemd_sysusers_t cgroup_t:filesystem { getattr };
 allow systemd_sysusers_t default_t:dir { getattr search add_name write };
 allow systemd_sysusers_t default_t:file { create };
 allow systemd_sysusers_t tmpfs_t:filesystem { getattr };
+allow systemd_sysusers_t unlabeled_t:dir { search };
 
 allow systemd_tmpfiles_t cgroup_t:filesystem { getattr };
 allow systemd_tmpfiles_t default_t:dir { add_name getattr search open read relabelfrom setattr write };
@@ -148,7 +194,10 @@ allow systemd_tmpfiles_t init_runtime_t:file { open read };
 allow systemd_tmpfiles_t mount_t:fd { use };
 allow systemd_tmpfiles_t system_dbusd_var_lib_t:lnk_file { create };
 allow systemd_tmpfiles_t tmpfs_t:file { getattr ioctl open read };
+allow systemd_tmpfiles_t unlabeled_t:dir { search };
 allow systemd_tmpfiles_t var_log_t:lnk_file { create };
+allow systemd_tmpfiles_t var_spool_t:dir { add_name };
+allow systemd_tmpfiles_t var_spool_t:fifo_file { create setattr relabelfrom relabelto };
 
 allow systemd_user_runtime_dir_t cgroup_t:dir { search };
 allow systemd_user_runtime_dir_t cgroup_t:filesystem { getattr };
