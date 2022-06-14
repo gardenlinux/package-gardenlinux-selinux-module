@@ -1,3 +1,9 @@
+gardenlinux-selinux-module (1.0.2) UNRELEASED; urgency=medium
+
+  * Extend rules to fix denied messages after setting selinux to enforced
+
+ -- Christoph Senkel <christoph.senkel@credativ.de>  Fri, 10 Jun 2022 14:46:52 +0000
+
 gardenlinux-selinux-module (1.0.1) gardenlinux; urgency=medium
 
   * Extend rule set to fix false positives for
