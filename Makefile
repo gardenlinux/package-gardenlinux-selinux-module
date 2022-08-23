@@ -1,6 +1,7 @@
 DESTDIR=
 
 gardenlinux.pp:
+	./version_patch.sh
 	checkmodule -M -m -o gardenlinux.mod gardenlinux-selinux-module.te
 	semodule_package -o gardenlinux.pp -m gardenlinux.mod
 	bzip2 -c gardenlinux.pp > gardenlinux.pp.bz2

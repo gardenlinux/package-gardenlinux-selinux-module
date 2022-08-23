@@ -12,5 +12,5 @@ Rules-Requires-Root: no
 Package: gardenlinux-selinux-module
 Architecture: all
 Depends: ${shlibs:Depends}, ${misc:Depends}, policycoreutils
-Description: Selinux module for GardenLinux
-  This package installs and enables selinux rules for GardenLinux.
+Description: SELinux module for GardenLinux
+  This package installs and enables the SELinux module for GardenLinux.

@@ -1,3 +1,9 @@
+gardenlinux-selinux-module (1.0.3) gardenlinux; urgency=medium
+
+  * Refactor rules to fit selinux-policy-default
+
+ -- Florian Paul Azim Hoberg <florian.hoberg@credativ.de>  Tue, 23 Aug 2022 13:12:38 +0000
+
 gardenlinux-selinux-module (1.0.2) gardenlinux; urgency=medium
 
   * Extend rules to fix denied messages after setting selinux to enforced
