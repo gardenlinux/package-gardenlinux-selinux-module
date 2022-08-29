@@ -1,56 +1,72 @@
 module gardenlinux @@VER@@;
 
 require {
-	type ifconfig_exec_t;
-	type virt_leaseshelper_t;
-	type device_t;
-        type devlog_t;
-	type local_login_t;
-	type systemd_machined_t;
-	type hugetlbfs_t;
-	type configfs_t;
-	type virtlogd_t;
+	type auditd_log_t;
 	type bin_t;
+	type boot_t;
 	type bpf_t;
-	type sysfs_t;
-        type sysctl_kernel_t;
-	type tracefs_t;
-	type init_runtime_t;
-	type tmpfs_t;
-	type ntpd_t;
-	type systemd_resolved_t;
-	type systemd_networkd_runtime_t;
-	type semanage_t;
-	type initrc_runtime_t;
-	type policykit_t;
+	type cert_t;
+	type cgroup_t;
+	type configfs_t;
+	type cron_spool_t;
+	type device_t;
+	type devlog_t;
+	type dnsmasq_t;
 	type dosfs_t;
 	type hostname_exec_t;
-	type systemd_logind_t;
-	type virtd_t;
-	type ramfs_t;
+	type hugetlbfs_t;
+	type ifconfig_exec_t;
+	type init_runtime_t;
+	type initrc_runtime_t;
+	type lib_t;
+	type local_login_t;
 	type locale_t;
 	type nsfs_t;
-	type var_run_t;
-	type pstore_t;
+	type ntpd_t;
+	type policykit_t;
 	type proc_t;
-	type udev_t;
-	type systemd_resolved_runtime_t;
-	type system_dbusd_t;
-	type systemd_networkd_t;
-	type boot_t;
-	type systemd_hostnamed_t;
-	type syslogd_runtime_t;
+	type pstore_t;
+	type ramfs_t;
+	type semanage_t;
+	type sysctl_kernel_t;
 	type sysctl_t;
-	type dnsmasq_t;
-        type urandom_device_t;
-	class filesystem getattr;
-	class file { create execute execute_no_trans getattr lock map open read unlink write };
-	class dbus send_msg;
-	class unix_stream_socket { connectto create };
-	class dir { create getattr read remove_name search write watch };
-	class sock_file write;
-        class unix_dgram_socket create;
+	type sysfs_t;
+	type syslogd_runtime_t;
+	type syslogd_t;
+	type syslogd_var_lib_t;
+	type system_cron_spool_t;
+	type system_dbusd_t;
+	type system_mail_t;
+	type systemd_generator_t;
+	type systemd_hostnamed_t;
+	type systemd_journal_t;
+	type systemd_logind_t;
+	type systemd_machined_t;
+	type systemd_networkd_runtime_t;
+	type systemd_networkd_t;
+	type systemd_resolved_runtime_t;
+	type systemd_resolved_t;
+	type systemd_sysusers_t;
+	type systemd_tmpfiles_t;
+	type tmpfs_t;
+	type tracefs_t;
+	type udev_t;
+	type urandom_device_t;
+	type var_run_t;
+	type var_spool_t;
+	type virt_leaseshelper_t;
+	type virtd_t;
+	type virtlogd_t;
+	class capability { sys_admin sys_rawio };
         class chr_file setattr;
+	class dbus send_msg;
+	class dir { add_name create getattr read remove_name search open write watch remove_name };
+	class sock_file { write create };
+	class fifo_file { create open relabelto setattr getattr read write relabelfrom };
+	class filesystem getattr;
+	class file { create execute execute_no_trans getattr setattr lock map open read unlink write map };
+	class unix_dgram_socket create;
+	class unix_stream_socket { connectto create };
 	class process getsched;
 }
 
@@ -59,6 +75,8 @@ allow dnsmasq_t systemd_resolved_runtime_t:dir read;
 allow dnsmasq_t systemd_resolved_runtime_t:dir watch;
 
 #============= local_login_t ==============
+allow local_login_t auditd_log_t:dir getattr;
+allow local_login_t var_run_t:file setattr;
 allow local_login_t boot_t:dir search;
 allow local_login_t bpf_t:dir getattr;
 allow local_login_t bpf_t:filesystem getattr;
@@ -96,8 +114,25 @@ allow policykit_t systemd_machined_t:unix_stream_socket connectto;
 #============= semanage_t ==============
 allow semanage_t systemd_machined_t:unix_stream_socket connectto;
 
+#============= syslogd_t ==============
+allow syslogd_t device_t:fifo_file { getattr setattr open read write create };
+allow syslogd_t syslogd_var_lib_t:sock_file create;
+allow syslogd_t systemd_journal_t:dir watch;
+allow syslogd_t tmpfs_t:dir { search write create add_name remove_name };
+allow syslogd_t tmpfs_t:file { create write open read map };
+
 #============= system_dbusd_t ==============
 allow system_dbusd_t systemd_machined_t:unix_stream_socket connectto;
+
+#============= systemd_generator_t ==============
+allow systemd_generator_t cert_t:file { open read getattr create write };
+allow systemd_generator_t cron_spool_t:dir { getattr search open read };
+allow systemd_generator_t cert_t:dir { search read open };
+allow systemd_generator_t lib_t:dir { add_name write search open create };
+allow systemd_generator_t self:capability { sys_rawio sys_admin };
+allow systemd_generator_t system_cron_spool_t:dir { open read search getattr };
+allow systemd_generator_t var_spool_t:dir { search write open read };
+allow systemd_generator_t var_run_t:dir write;
 
 #============= systemd_hostnamed_t ==============
 allow systemd_hostnamed_t init_runtime_t:dir { remove_name write };
@@ -109,14 +144,29 @@ allow systemd_logind_t locale_t:dir search;
 allow systemd_logind_t locale_t:file { getattr open read };
 allow systemd_logind_t virtd_t:dbus send_msg;
 
+#============= system_mail_t ==============
+allow system_mail_t var_spool_t:dir { add_name create read open write };
+
 #============= systemd_machined_t ==============
 allow systemd_machined_t proc_t:filesystem getattr;
 
 #============= systemd_networkd_t ==============
 allow systemd_networkd_t local_login_t:dbus send_msg;
+allow systemd_networkd_t init_runtime_t:dir read;
+allow systemd_networkd_t init_runtime_t:file { open read };
+
+#============= systemd_sysusers_t ==============
+allow systemd_sysusers_t tmpfs_t:dir search;
+allow systemd_sysusers_t ramfs_t:dir search;
+
+#============= systemd_tmpfiles_t ==============
+allow systemd_tmpfiles_t var_spool_t:dir add_name;
+allow systemd_tmpfiles_t var_spool_t:fifo_file { create setattr relabelfrom relabelto };
 
 #============= udev_t ==============
 allow udev_t init_runtime_t:dir read;
+allow udev_t cgroup_t:dir { add_name write create };
+allow udev_t cgroup_t:file { write create };
 
 #============= virt_leaseshelper_t ==============
 allow virt_leaseshelper_t sysctl_t:dir search;
