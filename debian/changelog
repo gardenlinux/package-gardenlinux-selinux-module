@@ -1,3 +1,9 @@
+gardenlinux-selinux-module (1.0.4) gardenlinux; urgency=medium
+
+  * Add rules for Garden Linux feature: cis
+
+ -- Florian Paul Azim Hoberg <florian.hoberg@credativ.de>  Mon, 29 Aug 2022 14:12:53 +0000
+
 gardenlinux-selinux-module (1.0.3) gardenlinux; urgency=medium
 
   * Refactor rules to fit selinux-policy-default
