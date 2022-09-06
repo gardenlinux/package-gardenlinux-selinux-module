@@ -1,3 +1,9 @@
+gardenlinux-selinux-module (1.0.5) gardenlinux; urgency=medium
+
+  * Add AWS hyperscaler related rules
+
+ -- Florian Paul Azim Hoberg <florian.hoberg@credativ.de>  Tue, 06 Sep 2022 12:02:14 +0000
+
 gardenlinux-selinux-module (1.0.4) gardenlinux; urgency=medium
 
   * Add rules for Garden Linux feature: cis
