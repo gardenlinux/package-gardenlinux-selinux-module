@@ -1,3 +1,9 @@
+gardenlinux-selinux-module (1.0.6) gardenlinux; urgency=medium
+
+  * Add Azure hyperscaler related rules
+
+ -- Florian Paul Azim Hoberg <florian.hoberg@credativ.de>  Tue, 06 Sep 2022 15:01:39 +0000
+
 gardenlinux-selinux-module (1.0.5) gardenlinux; urgency=medium
 
   * Add AWS hyperscaler related rules

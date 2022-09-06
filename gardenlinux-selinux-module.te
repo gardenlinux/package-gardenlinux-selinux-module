@@ -7,6 +7,7 @@ require {
 	type bpf_t;
 	type cert_t;
 	type cgroup_t;
+	type chronyd_t;
 	type configfs_t;
 	type cron_spool_t;
 	type device_t;
@@ -14,21 +15,26 @@ require {
 	type dnsmasq_t;
 	type dosfs_t;
 	type fixed_disk_device_t;
+	type fsadm_t;
 	type groupadd_t;
 	type hostname_exec_t;
 	type hugetlbfs_t;
 	type ifconfig_exec_t;
 	type init_runtime_t;
 	type initrc_runtime_t;
+	type iso9660_t;
 	type lib_t;
 	type local_login_t;
 	type locale_t;
+	type mount_t;
 	type nsfs_t;
 	type ntpd_t;
 	type policykit_t;
 	type proc_t;
 	type pstore_t;
 	type ramfs_t;
+	type removable_device_t;
+	type root_t;
 	type semanage_t;
 	type sshd_t;
 	type sysctl_kernel_t;
@@ -64,11 +70,11 @@ require {
 	type virt_leaseshelper_t;
 	type virtd_t;
 	type virtlogd_t;
-	class blk_file getattr;
+	class blk_file { getattr open read };
 	class capability { sys_admin sys_rawio dac_read_search };
         class chr_file setattr;
 	class dbus send_msg;
-	class dir { add_name create getattr read remove_name search open write watch remove_name };
+	class dir { add_name create getattr read remove_name search open write watch mounton };
 	class sock_file { write create };
 	class fifo_file { create open relabelto setattr getattr read write relabelfrom };
 	class filesystem getattr;
@@ -78,9 +84,16 @@ require {
 	class process { noatsecure rlimitinh siginh transition getsched };
 }
 
+#============= chronyd_t ==============
+allow chronyd_t self:capability dac_read_search;
+
 #============= dnsmasq_t ==============
 allow dnsmasq_t systemd_resolved_runtime_t:dir read;
 allow dnsmasq_t systemd_resolved_runtime_t:dir watch;
+
+#============= fsadm_t ==============
+allow fsadm_t root_t:dir { add_name remove_name write };
+allow fsadm_t root_t:file { create open read unlink write };
 
 #============= groupadd_t ==============
 allow groupadd_t proc_t:filesystem getattr;
@@ -116,6 +129,10 @@ allow local_login_t tracefs_t:dir getattr;
 allow local_login_t tracefs_t:filesystem getattr;
 allow local_login_t var_run_t:dir create;
 allow local_login_t var_run_t:file { create getattr lock open read write };
+
+#============= mount_t ==============
+allow mount_t initrc_runtime_t:dir mounton;
+allow mount_t iso9660_t:filesystem getattr;
 
 #============= ntpd_t ==============
 allow ntpd_t systemd_resolved_runtime_t:sock_file write;
