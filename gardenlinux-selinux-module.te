@@ -23,6 +23,7 @@ require {
 	type init_runtime_t;
 	type initrc_runtime_t;
 	type iso9660_t;
+	type kernel_t;
 	type lib_t;
 	type local_login_t;
 	type locale_t;
@@ -53,6 +54,7 @@ require {
 	type systemd_machined_t;
 	type systemd_networkd_runtime_t;
 	type systemd_networkd_t;
+	type systemd_notify_t;
 	type systemd_resolved_runtime_t;
 	type systemd_resolved_t;
 	type systemd_sysusers_t;
@@ -71,7 +73,7 @@ require {
 	type virtd_t;
 	type virtlogd_t;
 	class blk_file { getattr open read };
-	class capability { sys_admin sys_rawio dac_read_search };
+	class capability { sys_admin sys_rawio dac_read_search net_admin };
         class chr_file setattr;
 	class dbus send_msg;
 	class dir { add_name create getattr read remove_name search open write watch mounton };
@@ -79,7 +81,7 @@ require {
 	class fifo_file { create open relabelto setattr getattr read write relabelfrom };
 	class filesystem getattr;
 	class file { create append ioctl execute execute_no_trans getattr setattr lock map open read unlink write map };
-	class unix_dgram_socket create;
+	class unix_dgram_socket { create getopt sendto setopt write };
 	class unix_stream_socket { connectto create };
 	class process { noatsecure rlimitinh siginh transition getsched };
 }
@@ -210,6 +212,15 @@ allow systemd_networkd_t local_login_t:dbus send_msg;
 allow systemd_networkd_t init_runtime_t:dir read;
 allow systemd_networkd_t init_runtime_t:file { open read };
 allow systemd_networkd_t sshd_t:dbus send_msg;
+
+#============= systemd_notify_t ==============
+allow systemd_notify_t kernel_t:unix_dgram_socket sendto;
+allow systemd_notify_t proc_t:filesystem getattr;
+allow systemd_notify_t self:capability net_admin;
+allow systemd_notify_t self:unix_dgram_socket { create getopt setopt write };
+allow systemd_notify_t sysctl_kernel_t:dir search;
+allow systemd_notify_t sysctl_kernel_t:file { open read };
+allow systemd_notify_t sysctl_t:dir search;
 
 #============= systemd_sysusers_t ==============
 allow systemd_sysusers_t tmpfs_t:dir search;
