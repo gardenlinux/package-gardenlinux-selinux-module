@@ -1,3 +1,9 @@
+gardenlinux-selinux-module (1.0.9) gardenlinux; urgency=medium
+
+  * Update general rule set for updated packages
+
+ -- Florian Paul Azim Hoberg <florian.hoberg@netapp.com>  Thu, 15 Nov 2023 13:53:12 +0000
+
 gardenlinux-selinux-module (1.0.8) gardenlinux; urgency=medium
 
   * Enhance hyperscaler rules for Azure and GCP
