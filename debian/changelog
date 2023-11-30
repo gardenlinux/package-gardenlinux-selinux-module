@@ -1,3 +1,9 @@
+gardenlinux-selinux-module (1.0.10) gardenlinux; urgency=medium
+
+  * Add rules for _readonly feature
+
+ -- Florian Paul Azim Hoberg <florian.hoberg@netapp.com>  Thu, 30 Nov 2023 13:41:12 +0000
+
 gardenlinux-selinux-module (1.0.9) gardenlinux; urgency=medium
 
   * Update general rule set for updated packages
