@@ -1,6 +1,1 @@
-debian/files
-debian/.debhelper/
-debian/gardenlinux-selinux-module/
-gardenlinux.mod
-gardenlinux.pp
-gardenlinux.pp.bz2
+.build
